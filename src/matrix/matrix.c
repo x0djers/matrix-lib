@@ -4,8 +4,8 @@
 #include "../errors/errors.h"
 #include "matrix.h"
 
-ResultMatrix createMatrix(const uint64_t rows, const uint64_t columns) {
-	ResultMatrix resultMatrix;
+MatrixOutcome createMatrix(const uint64_t rows, const uint64_t columns) {
+	MatrixOutcome resultMatrix;
 
 	resultMatrix.errorCode = NONE_ERROR;
 
@@ -34,7 +34,7 @@ ResultMatrix createMatrix(const uint64_t rows, const uint64_t columns) {
 	}
 
 	if (resultMatrix.errorCode != NONE_ERROR) {
-		freeResultMatrix(&resultMatrix);
+		freeMatrixOutcome(&resultMatrix);
 	}
 
 	return resultMatrix;
@@ -54,7 +54,7 @@ void destroyMatrix(Matrix **matrix) {
 	}
 }
 
-void freeResultMatrix(ResultMatrix *resultMatrix) {
+void freeMatrixOutcome(MatrixOutcome *resultMatrix) {
 	destroyMatrix(&resultMatrix->matrix);
 	resultMatrix->errorCode = NONE_ERROR;
 }

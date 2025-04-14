@@ -15,10 +15,10 @@ typedef struct {
 typedef struct {
 	Matrix* matrix;
 	MatrixErrorCode errorCode;
-} ResultMatrix;
+} MatrixOutcome;
 
-ResultMatrix createMatrix(uint64_t rows, uint64_t columns);
+MatrixOutcome createMatrix(uint64_t rows, uint64_t columns);
 void destroyMatrix(Matrix** matrix);
-void freeResultMatrix(ResultMatrix* resultMatrix);
+void freeMatrixOutcome(MatrixOutcome* resultMatrix);
 
 #endif
