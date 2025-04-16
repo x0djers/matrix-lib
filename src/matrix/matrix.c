@@ -54,7 +54,7 @@ void destroyMatrix(Matrix **matrix) {
 	}
 }
 
-void freeMatrixOutcome(MatrixOutcome *resultMatrix) {
-	destroyMatrix(&resultMatrix->matrix);
-	resultMatrix->errorCode = NONE_ERROR;
+void freeMatrixOutcome(MatrixOutcome *matrixOutcome) {
+	destroyMatrix(&matrixOutcome->matrix);
+	matrixOutcome->errorCode = NONE_ERROR;
 }
