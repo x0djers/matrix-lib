@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "../errors/errors.h"
+#include "../output/output.h"
 
 MatrixOutcome createMatrix(const uint64_t rows, const uint64_t columns) {
 	MatrixOutcome resultMatrix;
@@ -271,4 +272,37 @@ MatrixDeterminant calculateDeterminant(const MatrixOutcome A) {
 	}
 
 	return result;
+}
+
+char* prepareMatrixBuffer(const MatrixOutcome A) {
+	size_t maxBufferSize = BUFFER_SIZE;
+	size_t currentBufferSize = 0;
+
+	char* buffer = malloc(maxBufferSize);
+
+	for (size_t rowsIter = 0; rowsIter < A.matrix->rows && buffer;
+		 rowsIter++) {
+		for (size_t colsIter = 0; colsIter < A.matrix->cols && buffer;
+			 colsIter++) {
+			const MATRIX_TYPE number = A.matrix->data[rowsIter][colsIter];
+			const size_t requiredSize =
+				snprintf(NULL, 0, MATRIX_ELEMENT_SPEC, number);
+			while (currentBufferSize + requiredSize > maxBufferSize &&
+				   buffer) {
+				maxBufferSize *= 2;
+				buffer = (char*)realloc(buffer, maxBufferSize);
+			}
+			if (buffer)
+				currentBufferSize +=
+					snprintf(buffer + currentBufferSize,
+							 maxBufferSize - currentBufferSize,
+							 MATRIX_ELEMENT_SPEC " ", number);
+		}
+		if (buffer)
+			currentBufferSize +=
+				snprintf(buffer + currentBufferSize,
+						 maxBufferSize - currentBufferSize, "\n");
+	}
+
+	return buffer;
 }
