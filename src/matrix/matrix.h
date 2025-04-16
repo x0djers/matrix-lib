@@ -51,7 +51,7 @@ MatrixOutcome createMatrix(uint64_t rows, uint64_t columns);
 void destroyMatrix(Matrix** matrix);
 
 /**
-  @brief Освобождает ресурсы структуры MatrixResult.
+  @brief Освобождает ресурсы структуры MatrixOutcome.
   @param matrixOutcome Указатель на структуру MatrixOutcome.
 */
 void freeMatrixOutcome(MatrixOutcome* matrixOutcome);
@@ -69,7 +69,7 @@ bool isMatricesSizesEqual(MatrixOutcome A, MatrixOutcome B);
   @param A Первая матрица.
   @param B Вторая матрица.
   @param isDiff Флаг вычисления разности (true - разность, false - сумма).
-  @return Структура MatrixOutCome.
+  @return Структура MatrixOutcome.
   @note Если в ходе вычислений произошла ошибка и код ошибки не NONE_ERROR,
 		то поле matrix структуры MatrixOutcome будет равно NULL.
 */
@@ -79,7 +79,7 @@ MatrixOutcome getSumOrDiffMatrices(MatrixOutcome A, MatrixOutcome B,
 /**
   @brief Создает копию матрицы.
   @param source Исходная матрица для копирования.
-  @return Структура MatrixResult.
+  @return Структура MatrixOutcome.
   @note Если в ходе копирования произошла ошибка и код ошибки не NONE_ERROR,
 	то поле matrix структуры MatrixOutcome будет равно NULL.
 */
