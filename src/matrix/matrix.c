@@ -94,3 +94,25 @@ MatrixOutcome getSumOrDiffMatrices(const MatrixOutcome A,
 
 	return result;
 }
+
+MatrixOutcome getMatrixCopy(const MatrixOutcome source) {
+	MatrixOutcome result = {.matrix = NULL, .errorCode = NONE_ERROR};
+
+	if (source.matrix == NULL)
+		result.errorCode = NULL_POINTER_ERROR;
+	else {
+		result = createMatrix(source.matrix->rows, source.matrix->cols);
+		if (result.errorCode == NONE_ERROR)
+			for (size_t rowsIter = 0; rowsIter < source.matrix->rows;
+				 rowsIter++)
+				for (size_t colsIter = 0; colsIter < source.matrix->cols;
+					 colsIter++)
+					result.matrix->data[rowsIter][colsIter] =
+						source.matrix->data[rowsIter][colsIter];
+	}
+
+	if (result.errorCode != NONE_ERROR && result.matrix != NULL)
+		destroyMatrix(&result.matrix);
+
+	return result;
+}

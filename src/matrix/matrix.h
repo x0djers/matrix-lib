@@ -6,8 +6,8 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "../../include/config.h"
 #include "../errors/errors.h"
@@ -75,5 +75,14 @@ bool isMatricesSizesEqual(MatrixOutcome A, MatrixOutcome B);
 */
 MatrixOutcome getSumOrDiffMatrices(MatrixOutcome A, MatrixOutcome B,
 								   bool isDiff);
+
+/**
+  @brief Создает копию матрицы.
+  @param source Исходная матрица для копирования.
+  @return Структура MatrixResult.
+  @note Если в ходе копирования произошла ошибка и код ошибки не NONE_ERROR,
+	то поле matrix структуры MatrixOutcome будет равно NULL.
+*/
+MatrixOutcome getMatrixCopy(MatrixOutcome source);
 
 #endif
