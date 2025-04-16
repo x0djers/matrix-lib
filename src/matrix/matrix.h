@@ -46,6 +46,12 @@ typedef struct {
 } MatrixDeterminant;
 
 /**
+  @typedef outputFunc
+  @brief Тип функции для вывода строки.
+*/
+typedef void (*outputFunc)(const char*);
+
+/**
   @brief Создает новую матрицу с заданным размером.
   @param rows Количество строк.
   @param columns Количество столбцов.
@@ -179,6 +185,14 @@ MatrixDeterminant calculateDeterminant(MatrixOutcome A);
   @note После использования, память, используемая для буфера, должна быть
   очищена вручную.
 */
-char* prepareMatrixBuffer(const MatrixOutcome A);
+char* prepareMatrixBuffer(MatrixOutcome A);
+
+/**
+  @brief Выводит матрицу, используя пользовательскую функцию вывода.
+  @param A Структура содержащая матрицу и возможный код ошибки.
+  @param output Функция обратного вызова для вывода строки.
+  @return Код ошибки MatrixErrorCode.
+*/
+MatrixErrorCode printMatrix(MatrixOutcome A, outputFunc output);
 
 #endif

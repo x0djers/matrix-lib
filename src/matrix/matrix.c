@@ -4,7 +4,6 @@
 #include <stdlib.h>
 
 #include "../errors/errors.h"
-#include "../output/output.h"
 
 MatrixOutcome createMatrix(const uint64_t rows, const uint64_t columns) {
 	MatrixOutcome resultMatrix;
@@ -305,4 +304,26 @@ char* prepareMatrixBuffer(const MatrixOutcome A) {
 	}
 
 	return buffer;
+}
+
+MatrixErrorCode printMatrix(const MatrixOutcome A, const outputFunc output) {
+	MatrixErrorCode errorCode = NONE_ERROR;
+
+	if (A.errorCode != NONE_ERROR) {
+		errorCode = A.errorCode;
+	} else if (A.matrix == NULL || A.matrix->data == NULL) {
+		errorCode = NULL_POINTER_ERROR;
+	}
+
+	if (errorCode == NONE_ERROR) {
+		char* buffer = prepareMatrixBuffer(A);
+		if (buffer == NULL) {
+			errorCode = PREPARE_BUFFER_ERROR;
+		} else {
+			output(buffer);
+			free(buffer);
+		}
+	}
+
+	return errorCode;
 }
