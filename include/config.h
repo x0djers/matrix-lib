@@ -3,4 +3,6 @@
 
 typedef double MATRIX_TYPE;
 
+typedef double DETERMINANT_TYPE;
+
 #endif

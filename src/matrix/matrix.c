@@ -17,7 +17,7 @@ MatrixOutcome createMatrix(const uint64_t rows, const uint64_t columns) {
 	} else {
 		resultMatrix.matrix->rows = rows;
 		resultMatrix.matrix->cols = columns;
-		resultMatrix.matrix->data = malloc(sizeof(MATRIX_TYPE *) * rows);
+		resultMatrix.matrix->data = malloc(sizeof(MATRIX_TYPE*) * rows);
 
 		if (resultMatrix.matrix->data == NULL) {
 			resultMatrix.errorCode = DATA_ALLOCATION_ERROR;
@@ -41,7 +41,7 @@ MatrixOutcome createMatrix(const uint64_t rows, const uint64_t columns) {
 	return resultMatrix;
 }
 
-void destroyMatrix(Matrix **matrix) {
+void destroyMatrix(Matrix** matrix) {
 	if (*matrix != NULL) {
 		for (size_t rowsIter = 0; rowsIter < (*matrix)->rows; rowsIter++) {
 			free((*matrix)->data[rowsIter]);
@@ -55,10 +55,22 @@ void destroyMatrix(Matrix **matrix) {
 	}
 }
 
-void freeMatrixOutcome(MatrixOutcome *matrixOutcome) {
+void freeMatrixOutcome(MatrixOutcome* matrixOutcome) {
 	if (matrixOutcome != NULL) {
 		destroyMatrix(&matrixOutcome->matrix);
 		matrixOutcome->errorCode = NONE_ERROR;
+	}
+}
+
+void fillMatrix(MatrixOutcome* A, const MATRIX_TYPE* data) {
+	if (A->matrix == NULL || A->matrix->data == NULL) {
+		A->errorCode = NULL_POINTER_ERROR;
+	} else {
+		for (size_t row = 0; row < A->matrix->rows; row++) {
+			for (size_t col = 0; col < A->matrix->cols; col++) {
+				A->matrix->data[row][col] = data[row * A->matrix->cols + col];
+			}
+		}
 	}
 }
 
@@ -67,8 +79,16 @@ bool isMatricesSizesEqual(const MatrixOutcome A, const MatrixOutcome B) {
 		   A.matrix->cols == B.matrix->cols;
 }
 
+bool isSquareMatrix(const MatrixOutcome A) {
+	return A.matrix->rows == A.matrix->cols;
+}
+
 bool canMultiplyMatrices(const MatrixOutcome A, const MatrixOutcome B) {
 	return A.matrix->cols == B.matrix->rows;
+}
+
+MatrixErrorCode canExclude(const size_t count, const size_t currentIndex) {
+	return count > currentIndex ? NONE_ERROR : EXCLUSION_ERROR;
 }
 
 MatrixOutcome getSumOrDiffMatrices(const MatrixOutcome A,
@@ -161,6 +181,92 @@ MatrixOutcome multiplyMatrices(const MatrixOutcome A, const MatrixOutcome B) {
 						result.matrix->data[rowIndex][colIndex] +=
 							A.matrix->data[rowIndex][resIndex] *
 							B.matrix->data[resIndex][colIndex];
+		}
+	}
+
+	return result;
+}
+
+MatrixOutcome getMinor(const MatrixOutcome A, const size_t excludeRowIndex,
+					   const size_t excludeColIndex) {
+	MatrixOutcome result = {.matrix = NULL, .errorCode = NONE_ERROR};
+
+	if (A.matrix == NULL)
+		result.errorCode = NULL_POINTER_ERROR;
+	else {
+		result.errorCode = canExclude(A.matrix->rows, excludeRowIndex);
+		if (result.errorCode == NONE_ERROR)
+			result.errorCode = canExclude(A.matrix->cols, excludeColIndex);
+	}
+
+	if (result.errorCode == NONE_ERROR) {
+		result = createMatrix(A.matrix->rows - 1, A.matrix->cols - 1);
+
+		if (result.errorCode == NONE_ERROR) {
+			MATRIX_TYPE* newMatrixData =
+				calloc(result.matrix->cols * result.matrix->rows,
+					   sizeof(MATRIX_TYPE));
+			size_t insertionIndex = 0;
+
+			for (size_t row = 0; row < A.matrix->rows; row++) {
+				for (size_t col = 0; col < A.matrix->cols; col++) {
+					if (!(row == excludeRowIndex || col == excludeColIndex)) {
+						newMatrixData[insertionIndex++] =
+							A.matrix->data[row][col];
+					}
+				}
+			}
+
+			fillMatrix(&result, newMatrixData);
+			free(newMatrixData);
+		}
+	}
+
+	if (result.errorCode != NONE_ERROR && result.matrix != NULL)
+		destroyMatrix(&result.matrix);
+
+	return result;
+}
+
+MatrixDeterminant calculateDeterminant(const MatrixOutcome A) {
+	MatrixDeterminant result = {.determinant = (DETERMINANT_TYPE)0,
+								.errorCode = NONE_ERROR};
+
+	if (A.errorCode != NONE_ERROR)
+		result.errorCode = A.errorCode;
+	else if (A.matrix == NULL || A.matrix->data == NULL)
+		result.errorCode = NULL_POINTER_ERROR;
+	else if (!isSquareMatrix(A))
+		result.errorCode = NOT_SQUARE_MATRIX_ERROR;
+	else {
+		MATRIX_TYPE** M = A.matrix->data;
+		switch (A.matrix->rows) {
+			case 1:
+				result.determinant = A.matrix->data[0][0];
+				break;
+			case 2:
+				result.determinant = M[0][0] * M[1][1] - M[0][1] * M[1][0];
+				break;
+			case 3:
+				result.determinant =
+					M[0][0] * M[1][1] * M[2][2] + M[0][1] * M[1][2] * M[2][0] +
+					M[0][2] * M[1][0] * M[2][1] - M[0][2] * M[1][1] * M[2][0] -
+					M[0][0] * M[1][2] * M[2][1] - M[0][1] * M[1][0] * M[2][2];
+				break;
+			default:
+				for (size_t colsIter = 0; colsIter < A.matrix->cols &&
+										  result.errorCode == NONE_ERROR;
+					 colsIter++) {
+					MatrixOutcome minorMatrix = getMinor(A, 0, colsIter);
+					const int8_t sign = colsIter & 1 ? -1 : 1;
+					const MatrixDeterminant minorDet =
+						calculateDeterminant(minorMatrix);
+					if (minorDet.errorCode != NONE_ERROR)
+						result.errorCode = minorDet.errorCode;
+					else
+						result.determinant += sign * minorDet.determinant;
+					freeMatrixOutcome(&minorMatrix);
+				}
 		}
 	}
 
