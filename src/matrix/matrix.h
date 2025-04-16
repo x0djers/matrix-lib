@@ -1,5 +1,6 @@
 /**
   @file matrix.h
+  @author x0djers
   @brief Предоставляет функции для работы с матрицами.
 */
 
@@ -96,6 +97,14 @@ bool isSquareMatrix(MatrixOutcome A);
   @return Код ошибки MatrixErrorCode.
 */
 MatrixErrorCode canExclude(size_t count, size_t currentIndex);
+
+/**
+  @brief Проверяет возможность умножения матриц.
+  @param A Первая матрица.
+  @param B Вторая матрица.
+  @return Код ошибки MatrixErrorCode.
+*/
+bool canMultiplyMatrices(MatrixOutcome A, MatrixOutcome B);
 
 /**
   @brief Вычисляет сумму или разность матриц.
