@@ -78,19 +78,20 @@ MatrixOutcome getSumOrDiffMatrices(const MatrixOutcome A,
 	else {
 		result = createMatrix(A.matrix->rows, A.matrix->cols);
 		if (result.errorCode == NONE_ERROR) {
-			for (size_t rowIter = 0; rowIter < A.matrix->rows; rowIter++) {
+			for (size_t rowsIter = 0; rowsIter < A.matrix->rows; rowsIter++) {
 				for (size_t colsIter = 0; colsIter < A.matrix->cols;
 					 colsIter++) {
-					result.matrix->data[rowIter][colsIter] =
-						A.matrix->data[rowIter][colsIter] +
-						B.matrix->data[rowIter][colsIter] *
+					result.matrix->data[rowsIter][colsIter] =
+						A.matrix->data[rowsIter][colsIter] +
+						B.matrix->data[rowsIter][colsIter] *
 							(1 - 2 * (int8_t)isDiff);
 				}
 			}
 		}
 	}
 
-	if (result.errorCode != NONE_ERROR) destroyMatrix(&result.matrix);
+	if (result.errorCode != NONE_ERROR && result.matrix != NULL)
+		destroyMatrix(&result.matrix);
 
 	return result;
 }
