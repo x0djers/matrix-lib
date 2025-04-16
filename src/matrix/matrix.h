@@ -7,19 +7,19 @@
 #define MATRIX_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "../../include/config.h"
 #include "../errors/errors.h"
-
 
 /**
   @struct Matrix
   @brief Структура матрицы.
 */
 typedef struct {
-	uint64_t rows; ///< Количество строк.
-	uint64_t cols; ///< Количеств столбцов.
-	MATRIX_TYPE** data; ///< Двумерный массив элементов.
+	uint64_t rows;		 ///< Количество строк.
+	uint64_t cols;		 ///< Количеств столбцов.
+	MATRIX_TYPE** data;	 ///< Двумерный массив элементов.
 } Matrix;
 
 /**
@@ -30,10 +30,9 @@ typedef struct {
   указатель на структуру самой матрицы.
 */
 typedef struct {
-	Matrix* matrix; ///< Указатель на структуру матрицы.
-	MatrixErrorCode errorCode; ///< Код ошибки.
+	Matrix* matrix;				///< Указатель на структуру матрицы.
+	MatrixErrorCode errorCode;	///< Код ошибки.
 } MatrixOutcome;
-
 
 /**
   @brief Создает новую матрицу с заданным размером.
@@ -56,5 +55,25 @@ void destroyMatrix(Matrix** matrix);
   @param matrixOutcome Указатель на структуру MatrixOutcome.
 */
 void freeMatrixOutcome(MatrixOutcome* matrixOutcome);
+
+/**
+  @brief Проверяет соответствие размеров матриц.
+  @param A Первая матрица.
+  @param B Вторая матрица.
+  @return True если размеры совпадают, иначе False.
+*/
+bool isMatricesSizesEqual(MatrixOutcome A, MatrixOutcome B);
+
+/**
+  @brief Вычисляет сумму или разность матриц.
+  @param A Первая матрица.
+  @param B Вторая матрица.
+  @param isDiff Флаг вычисления разности (true - разность, false - сумма).
+  @return Структура MatrixOutCome.
+  @note Если в ходе вычислений произошла ошибка и код ошибки не NONE_ERROR,
+		то поле matrix структуры MatrixOutcome будет равно NULL.
+*/
+MatrixOutcome getSumOrDiffMatrices(MatrixOutcome A, MatrixOutcome B,
+								   bool isDiff);
 
 #endif

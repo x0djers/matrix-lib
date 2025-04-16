@@ -1,8 +1,9 @@
+#include "matrix.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "../errors/errors.h"
-#include "matrix.h"
 
 MatrixOutcome createMatrix(const uint64_t rows, const uint64_t columns) {
 	MatrixOutcome resultMatrix;
@@ -59,4 +60,37 @@ void freeMatrixOutcome(MatrixOutcome *matrixOutcome) {
 		destroyMatrix(&matrixOutcome->matrix);
 		matrixOutcome->errorCode = NONE_ERROR;
 	}
+}
+
+bool isMatricesSizesEqual(const MatrixOutcome A, const MatrixOutcome B) {
+	return A.matrix->rows == B.matrix->rows &&
+		   A.matrix->cols == B.matrix->cols;
+}
+
+MatrixOutcome getSumOrDiffMatrices(const MatrixOutcome A,
+								   const MatrixOutcome B, const bool isDiff) {
+	MatrixOutcome result = {.matrix = NULL, .errorCode = NONE_ERROR};
+
+	if (A.matrix == NULL || B.matrix == NULL)
+		result.errorCode = NULL_POINTER_ERROR;
+	else if (!isMatricesSizesEqual(A, B))
+		result.errorCode = SIZE_MISMATCH_ERROR;
+	else {
+		result = createMatrix(A.matrix->rows, A.matrix->cols);
+		if (result.errorCode == NONE_ERROR) {
+			for (size_t rowIter = 0; rowIter < A.matrix->rows; rowIter++) {
+				for (size_t colsIter = 0; colsIter < A.matrix->cols;
+					 colsIter++) {
+					result.matrix->data[rowIter][colsIter] =
+						A.matrix->data[rowIter][colsIter] +
+						B.matrix->data[rowIter][colsIter] *
+							(1 - 2 * (int8_t)isDiff);
+				}
+			}
+		}
+	}
+
+	if (result.errorCode != NONE_ERROR) destroyMatrix(&result.matrix);
+
+	return result;
 }
