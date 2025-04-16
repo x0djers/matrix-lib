@@ -85,4 +85,13 @@ MatrixOutcome getSumOrDiffMatrices(MatrixOutcome A, MatrixOutcome B,
 */
 MatrixOutcome getMatrixCopy(MatrixOutcome source);
 
+/**
+  @brief Транспонирует матрицу.
+  @param A Исходная матрица.
+  @return Структура MatrixOutcome.
+  @note Если в ходе транспонирования произошла ошибка и код ошибки не
+  NONE_ERROR, то поле matrix структуры MatrixOutcome будет равно NULL.
+*/
+MatrixOutcome transposeMatrix(MatrixOutcome A);
+
 #endif

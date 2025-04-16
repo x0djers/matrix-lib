@@ -117,3 +117,24 @@ MatrixOutcome getMatrixCopy(const MatrixOutcome source) {
 
 	return result;
 }
+
+MatrixOutcome transposeMatrix(const MatrixOutcome A) {
+	MatrixOutcome result = {.matrix = NULL, .errorCode = NONE_ERROR};
+
+	if (A.matrix == NULL) {
+		result.errorCode = NULL_POINTER_ERROR;
+	} else {
+		result = createMatrix(A.matrix->cols, A.matrix->rows);
+		if (result.errorCode == NONE_ERROR)
+			for (size_t rowsIter = 0; rowsIter < A.matrix->rows; rowsIter++)
+				for (size_t colsIter = 0; colsIter < A.matrix->cols;
+					 colsIter++)
+					result.matrix->data[colsIter][rowsIter] =
+						A.matrix->data[rowsIter][colsIter];
+	}
+
+	if (result.errorCode != NONE_ERROR && result.matrix != NULL)
+		destroyMatrix(&result.matrix);
+
+	return result;
+}
