@@ -11,6 +11,8 @@ typedef enum {
 	NOT_SQUARE_MATRIX_ERROR,  ///< Матрица не является квадратной.
 	EXCLUSION_ERROR,		  ///< Ошибка исключения строки/столбца.
 	PREPARE_BUFFER_ERROR,	  ///< Ошибка подготовки строкового представления.
+	FILE_OPEN_ERROR,		  ///< Ошибка открытия файла.
+	FILE_READ_ERROR,		  ///< Ошибка чтения файла.
 } MatrixErrorCode;
 
 #endif

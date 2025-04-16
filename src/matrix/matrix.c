@@ -327,3 +327,42 @@ MatrixErrorCode printMatrix(const MatrixOutcome A, const outputFunc output) {
 
 	return errorCode;
 }
+
+MatrixOutcome loadMatrixFromFile(const char* fileName) {
+	MatrixOutcome result = {.matrix = NULL, .errorCode = NONE_ERROR};
+
+	FILE* file = fopen(fileName, "r");
+	if (file == NULL) {
+		result.errorCode = FILE_OPEN_ERROR;
+	}
+
+	if (result.errorCode == NONE_ERROR) {
+		size_t rows = 0, cols = 0;
+		if (fscanf(file, "%zu %zu", &rows, &cols) != 2) {
+			result.errorCode = FILE_READ_ERROR;
+		} else {
+			result = createMatrix(rows, cols);
+			if (result.errorCode == NONE_ERROR) {
+				for (size_t rowsIter = 0;
+					 rowsIter < rows && result.errorCode == NONE_ERROR;
+					 rowsIter++) {
+					for (size_t colsIter = 0;
+						 colsIter < cols && result.errorCode == NONE_ERROR;
+						 colsIter++) {
+						if (fscanf(file, MATRIX_ELEMENT_SPEC,
+								   &result.matrix->data[rowsIter][colsIter]) !=
+							1) {
+							result.errorCode = FILE_READ_ERROR;
+						}
+					}
+				}
+				fclose(file);
+			}
+		}
+	}
+	if (result.errorCode != NONE_ERROR) {
+		freeMatrixOutcome(&result);
+	}
+
+	return result;
+}
