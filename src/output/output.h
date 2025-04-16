@@ -1,19 +1,24 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
-#include <stdio.h>
+/**
+  @typedef outputFunc
+  @brief Тип функции для вывода строки.
+*/
+typedef void (*outputFunc)(const char*, void* context);
 
 /**
   @brief Выводит строку в стандартный поток вывода.
   @param buffer Указатель на строку, которая будет выведена.
+  @param context Указатель на поток вывода.
 */
-void outputToStdOut(const char *buffer);
+void outputToStd(const char *buffer, void* context);
 
 /**
   @brief Выводит строку в файл.
   @param buffer Указатель на строку, которая будет записана в файл.
-  @param file Указатель на открытый файловый поток.
+  @param context Путь до файла для записи.
 */
-void outputToFile(const char *buffer, FILE *file);
+void outputToFile(const char *buffer, void *context);
 
 #endif

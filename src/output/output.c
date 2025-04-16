@@ -1,9 +1,14 @@
+#include <stdio.h>
+
 #include "output.h"
 
-void outputToStdOut(const char *buffer) {
-	puts(buffer);
+
+void outputToStd(const char* buffer, void* context) {
+	fputs(buffer, context);
 }
 
-void outputToFile(const char *buffer, FILE *file) {
+void outputToFile(const char *buffer, void* context) {
+	const char* fileName = context;
+	FILE* file = fopen(fileName, "w");
 	fputs(buffer, file);
 }
