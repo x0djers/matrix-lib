@@ -94,4 +94,14 @@ MatrixOutcome getMatrixCopy(MatrixOutcome source);
 */
 MatrixOutcome transposeMatrix(MatrixOutcome A);
 
+/**
+  @brief Вычисляет произведение матриц.
+  @param A Первая матрица.
+  @param B Вторая матрица.
+  @return Структура MatrixOutcome.
+  @note Если в ходе умножения произошла ошибка и код ошибки не
+  NONE_ERROR, то поле matrix структуры MatrixOutcome будет равно NULL.
+*/
+MatrixOutcome multiplyMatrices(const MatrixOutcome A, const MatrixOutcome B);
+
 #endif

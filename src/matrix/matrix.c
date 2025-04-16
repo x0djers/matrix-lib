@@ -67,6 +67,10 @@ bool isMatricesSizesEqual(const MatrixOutcome A, const MatrixOutcome B) {
 		   A.matrix->cols == B.matrix->cols;
 }
 
+bool canMultiplyMatrices(const MatrixOutcome A, const MatrixOutcome B) {
+	return A.matrix->cols == B.matrix->rows;
+}
+
 MatrixOutcome getSumOrDiffMatrices(const MatrixOutcome A,
 								   const MatrixOutcome B, const bool isDiff) {
 	MatrixOutcome result = {.matrix = NULL, .errorCode = NONE_ERROR};
@@ -135,6 +139,30 @@ MatrixOutcome transposeMatrix(const MatrixOutcome A) {
 
 	if (result.errorCode != NONE_ERROR && result.matrix != NULL)
 		destroyMatrix(&result.matrix);
+
+	return result;
+}
+
+MatrixOutcome multiplyMatrices(const MatrixOutcome A, const MatrixOutcome B) {
+	MatrixOutcome result = {.matrix = NULL, .errorCode = NONE_ERROR};
+
+	if (A.matrix == NULL || B.matrix == NULL)
+		result.errorCode = NULL_POINTER_ERROR;
+	else if (!canMultiplyMatrices(A, B))
+		result.errorCode = SIZE_MISMATCH_ERROR;
+	else {
+		result = createMatrix(A.matrix->rows, B.matrix->cols);
+		if (result.errorCode == NONE_ERROR) {
+			for (size_t rowIndex = 0; rowIndex < A.matrix->rows; rowIndex++)
+				for (size_t colIndex = 0; colIndex < B.matrix->cols;
+					 colIndex++)
+					for (size_t resIndex = 0; resIndex < A.matrix->cols;
+						 resIndex++)
+						result.matrix->data[rowIndex][colIndex] +=
+							A.matrix->data[rowIndex][resIndex] *
+							B.matrix->data[resIndex][colIndex];
+		}
+	}
 
 	return result;
 }
