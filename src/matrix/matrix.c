@@ -1,9 +1,8 @@
-#include "matrix.h"
-
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "matrix.h"
 
 MatrixOutcome createMatrix(const uint64_t rows, const uint64_t columns) {
 	MatrixOutcome resultMatrix;
