@@ -1,7 +1,9 @@
 #include "matrix.h"
 
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 MatrixOutcome createMatrix(const uint64_t rows, const uint64_t columns) {
 	MatrixOutcome resultMatrix;
@@ -338,32 +340,72 @@ MatrixOutcome loadMatrixFromFile(const char* fileName) {
 		result.errorCode = FILE_OPEN_ERROR;
 	}
 
+	size_t rows = 0, cols = 0;
+	char line[BUFFER_SIZE];
+
 	if (result.errorCode == NONE_ERROR) {
-		size_t rows = 0, cols = 0;
-		if (fscanf(file, "%zu %zu", &rows, &cols) != 2) {
-			result.errorCode = FILE_READ_ERROR;
-		} else {
-			result = createMatrix(rows, cols);
-			if (result.errorCode == NONE_ERROR) {
-				for (size_t rowsIter = 0;
-					 rowsIter < rows && result.errorCode == NONE_ERROR;
-					 rowsIter++) {
-					for (size_t colsIter = 0;
-						 colsIter < cols && result.errorCode == NONE_ERROR;
-						 colsIter++) {
-						if (fscanf(file, MATRIX_ELEMENT_SPEC,
-								   &result.matrix->data[rowsIter][colsIter]) !=
-							1) {
-							result.errorCode = FILE_READ_ERROR;
-						}
-					}
+		while (fgets(line, sizeof(line), file)) {
+			rows++;
+			if (rows == 1) {
+				const char* token = strtok(line, ELEMENT_DELIMITER);
+				while (token != NULL) {
+					cols++;
+					token = strtok(NULL, ELEMENT_DELIMITER);
 				}
-				fclose(file);
 			}
 		}
+
+		if (rows == 0 || cols == 0) {
+			result.errorCode = FILE_READ_ERROR;
+		}
 	}
+
+	if (result.errorCode == NONE_ERROR) {
+		result = createMatrix(rows, cols);
+		if (result.errorCode != NONE_ERROR) {
+			fclose(file);
+		}
+	}
+
+	if (result.errorCode == NONE_ERROR) {
+		rewind(file);
+
+		size_t rowsIter = 0;
+		while (fgets(line, sizeof(line), file) && rowsIter < rows &&
+			   result.errorCode == NONE_ERROR) {
+			size_t colsIter = 0;
+			const char* token = strtok(line, ELEMENT_DELIMITER);
+
+			while (token != NULL && colsIter < cols &&
+				   result.errorCode == NONE_ERROR) {
+				MATRIX_TYPE value;
+
+				if (sscanf(token, MATRIX_ELEMENT_SPEC, &value) != 1) {
+					result.errorCode = FILE_READ_ERROR;
+				} else {
+					result.matrix->data[rowsIter][colsIter] = value;
+					colsIter++;
+				}
+
+				token = strtok(NULL, ELEMENT_DELIMITER);
+			}
+
+			if (colsIter != cols) {
+				result.errorCode = FILE_READ_ERROR;
+			}
+
+			rowsIter++;
+		}
+
+		if (rowsIter != rows) {
+			result.errorCode = FILE_READ_ERROR;
+		}
+
+		fclose(file);
+	}
+
 	if (result.errorCode != NONE_ERROR) {
-		freeMatrixOutcome(&result);
+		destroyMatrix(&result.matrix);
 	}
 
 	return result;

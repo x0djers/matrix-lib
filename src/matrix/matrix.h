@@ -191,4 +191,17 @@ char* prepareMatrixBuffer(MatrixOutcome A);
 */
 MatrixErrorCode printMatrix(MatrixOutcome A, outputFunc output, void* context);
 
+/**
+  @param fileName Имя файла, из которого нужно считать матрицу.
+ *
+ * @brief Загружает матрицу из текстового файла.
+  Функция считывает значения матрицы из файла, в котором данные представлены
+  в табличной форме без указания размеров. Размеры определяются автоматически
+  по количеству строк и столбцов в первой строке.
+  Разделители между элементами определяются параметром ELEMENT_DELIMITER в
+ конфиге. Тип элементов и формат чтения определяются параметрами MATRIX_TYPE и
+ MATRIX_ELEMENT_SPEC.
+  @return MatrixOutcome Структура с результатом загрузки.
+*/
+MatrixOutcome loadMatrixFromFile(const char* fileName);
 #endif
