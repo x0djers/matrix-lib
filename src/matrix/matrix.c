@@ -1,7 +1,7 @@
+#include "matrix.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "matrix.h"
 
 MatrixOutcome createMatrix(const uint64_t rows, const uint64_t columns) {
 	MatrixOutcome resultMatrix;
@@ -304,7 +304,8 @@ char* prepareMatrixBuffer(const MatrixOutcome A) {
 	return buffer;
 }
 
-MatrixErrorCode printMatrix(const MatrixOutcome A, const outputFunc output, void* context) {
+MatrixErrorCode printMatrix(const MatrixOutcome A, const outputFunc output,
+							void* context) {
 	MatrixErrorCode errorCode = NONE_ERROR;
 
 	if (A.errorCode != NONE_ERROR) {

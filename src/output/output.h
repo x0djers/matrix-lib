@@ -5,14 +5,14 @@
   @typedef outputFunc
   @brief Тип функции для вывода строки.
 */
-typedef void (*outputFunc)(const char*, void* context);
+typedef void (*outputFunc)(const char *, void *context);
 
 /**
   @brief Выводит строку в стандартный поток вывода.
   @param buffer Указатель на строку, которая будет выведена.
   @param context Указатель на поток вывода.
 */
-void outputToStd(const char *buffer, void* context);
+void outputToStd(const char *buffer, void *context);
 
 /**
   @brief Выводит строку в файл.

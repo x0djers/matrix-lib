@@ -185,8 +185,8 @@ char* prepareMatrixBuffer(MatrixOutcome A);
   @brief Выводит матрицу, используя пользовательскую функцию вывода.
   @param A Структура содержащая матрицу и возможный код ошибки.
   @param output Функция обратного вызова для вывода строки.
-  @param context Контекст, передаваемый в функцию вывода (например, путь на до файла
-                 или указатель на поток вывода).
+  @param context Контекст, передаваемый в функцию вывода (например, путь на до
+  файла или указатель на поток вывода).
   @return Код ошибки MatrixErrorCode.
 */
 MatrixErrorCode printMatrix(MatrixOutcome A, outputFunc output, void* context);
