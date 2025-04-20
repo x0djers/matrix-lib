@@ -8,34 +8,37 @@ MatrixOutcome createMatrix(const uint64_t rows, const uint64_t columns) {
 
 	resultMatrix.errorCode = NONE_ERROR;
 
-	resultMatrix.matrix = malloc(sizeof(Matrix));
-
-	if (resultMatrix.matrix == NULL) {
-		resultMatrix.errorCode = MATRIX_ALLOCATION_ERROR;
+	if (rows == 0 || columns == 0) {
+		resultMatrix.errorCode = INVALID_SIZE_ERROR;
 	} else {
-		resultMatrix.matrix->rows = rows;
-		resultMatrix.matrix->cols = columns;
-		resultMatrix.matrix->data = malloc(sizeof(MATRIX_TYPE*) * rows);
+		resultMatrix.matrix = malloc(sizeof(Matrix));
 
-		if (resultMatrix.matrix->data == NULL) {
-			resultMatrix.errorCode = DATA_ALLOCATION_ERROR;
-		}
+		if (resultMatrix.matrix == NULL) {
+			resultMatrix.errorCode = MATRIX_ALLOCATION_ERROR;
+		} else {
+			resultMatrix.matrix->rows = rows;
+			resultMatrix.matrix->cols = columns;
+			resultMatrix.matrix->data = malloc(sizeof(MATRIX_TYPE*) * rows);
 
-		for (size_t rowsIter = 0;
-			 rowsIter < rows && resultMatrix.errorCode == NONE_ERROR;
-			 rowsIter++) {
-			resultMatrix.matrix->data[rowsIter] =
-				malloc(sizeof(MATRIX_TYPE) * columns);
-			if (resultMatrix.matrix->data[rowsIter] == NULL) {
+			if (resultMatrix.matrix->data == NULL) {
 				resultMatrix.errorCode = DATA_ALLOCATION_ERROR;
 			}
+
+			for (size_t rowsIter = 0;
+				 rowsIter < rows && resultMatrix.errorCode == NONE_ERROR;
+				 rowsIter++) {
+				resultMatrix.matrix->data[rowsIter] =
+					malloc(sizeof(MATRIX_TYPE) * columns);
+				if (resultMatrix.matrix->data[rowsIter] == NULL) {
+					resultMatrix.errorCode = DATA_ALLOCATION_ERROR;
+				}
+			}
+		}
+
+		if (resultMatrix.errorCode != NONE_ERROR) {
+			freeMatrixOutcome(&resultMatrix);
 		}
 	}
-
-	if (resultMatrix.errorCode != NONE_ERROR) {
-		freeMatrixOutcome(&resultMatrix);
-	}
-
 	return resultMatrix;
 }
 
