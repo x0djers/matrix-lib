@@ -9,5 +9,8 @@ void outputToStd(const char* buffer, void* context) {
 void outputToFile(const char* buffer, void* context) {
 	const char* fileName = context;
 	FILE* file = fopen(fileName, "w");
-	fputs(buffer, file);
+	if (file != NULL) {
+		fputs(buffer, file);
+		fclose(file);
+	}
 }
