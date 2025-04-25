@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-MatrixOutcome createMatrix(const uint64_t rows, const uint64_t columns) {
+MatrixOutcome createMatrix(const size_t rows, const size_t columns) {
 	MatrixOutcome resultMatrix;
 
 	resultMatrix.errorCode = NONE_ERROR;

@@ -20,8 +20,8 @@
   @brief Структура матрицы.
 */
 typedef struct {
-	uint64_t rows;		 ///< Количество строк.
-	uint64_t cols;		 ///< Количеств столбцов.
+	size_t rows;		 ///< Количество строк.
+	size_t cols;		 ///< Количеств столбцов.
 	MATRIX_TYPE** data;	 ///< Двумерный массив элементов.
 } Matrix;
 
@@ -54,7 +54,7 @@ typedef struct {
   @note Если в ходе создания произошла ошибка и код ошибки не NONE_ERROR,
   то поле matrix структуры MatrixOutcome будет равно NULL.
  */
-MatrixOutcome createMatrix(uint64_t rows, uint64_t columns);
+MatrixOutcome createMatrix(size_t rows, size_t columns);
 
 /**
   @brief Освобождает память, выделенную под матрицу.
