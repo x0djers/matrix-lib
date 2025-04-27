@@ -182,6 +182,9 @@ make test
 
 #### Выполнение:
 Был реализован минимальный [пример](examples/create_example.c) использования библиотеки.
+В связи с особенностями хранения матрицы в памяти был использован способ
+построчного dump и последующего объединения в общий dump-файл. Для упрощения процесса
+был создан [bash-скрипт](scripts/matrix_dump.sh).
 
 **Компиляция примера работы**
 ```sh
@@ -190,51 +193,17 @@ make example
 
 Исполняемый файл примера также будет находиться в папке bin.
 
-**Запуск примера с помощью gdb**
+**Запуск скрипта для создания dump-файла**
 ```sh
-cd bin
-gdb ExampleMatrixLib
+./scripts/matrix_dump.sh bin/ExampleMatrixLib
 ```
+После успешного выполнения будет выведено сообщение о записи файла.
+Dump-файл будет сохранён по пути data/output/matrix_dump.bin
 
-**Установка точки остановки выполнения**
-```sh
-break 11
-```
+При открытии dump-файла матрицы (с заданными параметрами) в hex-редакторе 
+получим следующий вывод:
 
-**Запуск выполнения**
-```sh
-run
-```
-
-**Определение необходимых переменных**
-```sh
-set $rows = matrix.matrix->rows
-set $cols = matrix.matrix->cols
-set $elementSize = sizeof(MATRIX_TYPE)
-set $rowSize = $cols * $elementSize 
-```
-
-**Открытие файла для записи**
-```sh
-set $outputFile = fopen("matrix_dump.bin", "wb")
-```
-
-**Dump памяти матрицы в файл**
-```sh
-set $iter = 0
-while $iter < $rows
-    set $rowStart = matrix.matrix->data[$iter]
-    fwrite($outputFile, $rowStart, $rowSize)
-    set $iter = $iter + 1
-end
-```
-
-**Закрытие файла**
-```sh
-fclose($outputFile)
-```
-
-Dump будет записан по пути bin/matrix_dump.bin
+![MatrixDump](img/matrix_dump.png)
 
 <br>
 
