@@ -4,25 +4,30 @@ FLAGS = -Wall -Wextra -g -std=c17 -DDEBUG
 INCLUDE_DIR = ./include
 SRC_DIR = ./src
 TEST_DIR = ./tests
+EXAMPLE_DIR = ./examples
 BUILD_DIR = ./build
 BIN_DIR = ./bin
 BUILD_SRC_DIR = $(BUILD_DIR)/src
 BUILD_TEST_DIR = $(BUILD_DIR)/tests
+BUILD_EXAMPLE_DIR = $(BUILD_DIR)/examples
 
 LIB_SRC := $(shell find $(SRC_DIR) -name "*.c" ! -name "main.c")
 TEST_RUNNER_SRC :=  $(TEST_DIR)/test_runner.c
 TEST_SRC := $(shell find $(TEST_DIR) -name "*.c" ! -name "*_runner*")
+EXAMPLE_SRC := $(shell find $(EXAMPLE_DIR) -name "*.c")
 MAIN_SRC := $(shell find $(SRC_DIR) -name "main.c")
 ALL_SRC := $(LIB_SRC) $(TEST_SRC) $(TEST_RUNNER_SRC) $(MAIN_SRC)
 
 LIB_OBJ := $(patsubst $(SRC_DIR)/%.c,$(BUILD_SRC_DIR)/%.o,$(LIB_SRC))
 TEST_OBJ := $(patsubst $(TEST_DIR)/%.c,$(BUILD_TEST_DIR)/%.o,$(TEST_SRC))
+EXAMPLE_OBJ := $(patsubst $(EXAMPLE_DIR)/%.c,$(BUILD_EXAMPLE_DIR)/%.o,$(EXAMPLE_SRC))
 TEST_RUNNER_OBJ := $(patsubst $(TEST_DIR)/%.c,$(BUILD_TEST_DIR)/%.o,$(TEST_RUNNER_SRC))
 MAIN_OBJ := $(patsubst $(SRC_DIR)/%.c,$(BUILD_SRC_DIR)/%.o,$(MAIN_SRC))
 ALL_OBJ := $(LIB_OBJ) $(TEST_OBJ) $(MAIN_OBJ)
 
 TARGET = $(BIN_DIR)/MatrixLib
 TEST_TARGET = $(BIN_DIR)/MatrixLibTest
+EXAMPLE_TARGET = $(BIN_DIR)/ExampleMatrixLib
 
 all: create-dirs $(TARGET)
 
@@ -53,6 +58,11 @@ $(BUILD_TEST_DIR)/%.o: $(TEST_DIR)/%.c
 	mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
+example: $(EXAMPLE_TARGET) | create-dirs
+
+$(EXAMPLE_TARGET): $(LIB_OBJ) $(EXAMPLE_OBJ) | create-dirs
+	$(CC) $(FLAGS) $^ -o $@
+
 clean:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
 
@@ -66,4 +76,4 @@ clang-format:
 	@find "./" -name '*.c' -o -name '*.h' | \
 	xargs clang-format --style=file -i -Werror
 
-.PHONY: all rebuild test clean clang-check clang-format
+.PHONY: all rebuild test clean clang-check clang-format example
