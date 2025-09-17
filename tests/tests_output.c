@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../src/output/output.h"
+#include "output.h"
 
 #define TEST_OUTPUT_FILE "test_output.txt"
 

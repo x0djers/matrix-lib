@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../src/matrix/matrix.h"
+#include "matrix.h"
 
 // Тест создания матрицы
 void test_createMatrix(void) {
