@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-#include "../../../include/config.h"
+#include "config.h"
 
 extern const MatrixErrorMessage RU_MESSAGES[ERRORS_COUNT];
 extern const MatrixErrorMessage EN_MESSAGES[ERRORS_COUNT];

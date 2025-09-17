@@ -11,9 +11,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "../../include/config.h"
-#include "../errors/errors.h"
-#include "../output/output.h"
+#include "config.h"
+#include "errors.h"
+#include "output.h"
 
 /**
   @struct Matrix

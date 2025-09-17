@@ -9,7 +9,7 @@
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
-#include "../errors.h"
+#include "errors.h"
 
 #define DEFAULT_LANGUAGE EN_LANGUAGE
 
