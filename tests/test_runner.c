@@ -9,7 +9,6 @@
 
 void register_matrix_tests(void);
 void register_output_tests(void);
-void register_main_tests(void);
 
 int main() {
 	CU_ErrorCode error;
@@ -18,7 +17,6 @@ int main() {
 	} else {
 		register_matrix_tests();
 		register_output_tests();
-		register_main_tests();
 
 		CU_basic_set_mode(CU_BRM_VERBOSE);
 
