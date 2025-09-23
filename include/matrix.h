@@ -69,6 +69,24 @@ void destroyMatrix(Matrix** matrix);
 void freeMatrixOutcome(MatrixOutcome* matrixOutcome);
 
 /**
+ * @brief Устанавливает значение элемента матрицы.
+ *
+ * Функция записывает переданное значение `value` в элемент матрицы `A`
+ * на позицию с индексами `row` и `column`.
+ *
+ * @param A Указатель на структуру MatrixOutcome, содержащую матрицу.
+ * @param row Индекс строки элемента (0-based).
+ * @param column Индекс столбца элемента (0-based).
+ * @param value Значение, которое будет установлено в элемент матрицы.
+ *
+ * @return Код ошибки типа MatrixErrorCode.
+ */
+MatrixErrorCode setMatrixElement(const MatrixOutcome* A,
+                                 size_t row,
+                                 size_t column,
+                                 MATRIX_TYPE value);
+
+/**
   @brief Заполняет матрицу данными из массива.
   @param A Указатель на структуру MatrixOutcome.
   @param data Указатель на массив данных.

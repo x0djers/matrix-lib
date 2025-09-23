@@ -9,6 +9,8 @@ const MatrixErrorMessage RU_MESSAGES[] = {
 		 "Ошибка выделения памяти для элементов матрицы."},
 	[INVALID_SIZE_ERROR] = {INVALID_SIZE_ERROR,
 							"Некорректный размер матрицы."},
+	[INVALID_ELEMENT_ERROR] = {INVALID_SIZE_ERROR,
+								"Неккоретный элемент матрицы."},
 	[NULL_POINTER_ERROR] = {NULL_POINTER_ERROR,
 							"Ошибка указателя. Передан нулевой указатель."},
 	[SIZE_MISMATCH_ERROR] = {SIZE_MISMATCH_ERROR,

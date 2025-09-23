@@ -8,6 +8,7 @@ const MatrixErrorMessage EN_MESSAGES[] = {
 		{DATA_ALLOCATION_ERROR,
 		 "Failed to allocate memory for matrix elements."},
 	[INVALID_SIZE_ERROR] = {INVALID_SIZE_ERROR, "Invalid matrix size."},
+	[INVALID_ELEMENT_ERROR] = {INVALID_SIZE_ERROR, "Invalid matrix element."},
 	[NULL_POINTER_ERROR] = {NULL_POINTER_ERROR,
 							"Pointer error. A null pointer has been passed."},
 	[SIZE_MISMATCH_ERROR] =

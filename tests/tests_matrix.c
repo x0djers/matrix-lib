@@ -31,6 +31,37 @@ void test_createMatrix(void) {
 	}
 }
 
+// Тест на установку элемента матрицы
+void test_setMatrixElement(void) {
+	// Создаём матрицу 2x2
+	MatrixOutcome A = createMatrix(2, 2);
+	CU_ASSERT_EQUAL(A.errorCode, NONE_ERROR);
+
+	// Корректная установка элемента
+	MatrixErrorCode err = setMatrixElement(&A, 0, 1, 42);
+	CU_ASSERT_EQUAL(err, NONE_ERROR);
+	CU_ASSERT_EQUAL(A.matrix->data[0][1], 42);
+
+	// Ещё один корректный элемент
+	err = setMatrixElement(&A, 1, 0, 99);
+	CU_ASSERT_EQUAL(err, NONE_ERROR);
+	CU_ASSERT_EQUAL(A.matrix->data[1][0], 99);
+
+	// Попытка установки элемента за пределами матрицы
+	err = setMatrixElement(&A, 2, 0, 123);
+	CU_ASSERT_EQUAL(err, INVALID_ELEMENT_ERROR);
+
+	err = setMatrixElement(&A, 0, 2, 456);
+	CU_ASSERT_EQUAL(err, INVALID_ELEMENT_ERROR);
+
+	// Попытка установки элемента с NULL указателем
+	err = setMatrixElement(NULL, 0, 0, 7);
+	CU_ASSERT_EQUAL(err, NULL_POINTER_ERROR); // если в будущем добавим проверку на NULL
+
+	freeMatrixOutcome(&A);
+}
+
+
 // Тест на проверку равенства размеров матриц
 void test_isMatricesSizesEqual(void) {
 	MatrixOutcome A = createMatrix(2, 2);
@@ -193,6 +224,7 @@ void test_loadMatrixFromFile(void) {
 void register_matrix_tests(void) {
 	CU_pSuite suite = CU_add_suite("Matrix Tests", NULL, NULL);
 	CU_add_test(suite, "Create Matrix", test_createMatrix);
+	CU_add_test(suite, "Set Martix Element", test_setMatrixElement);
 	CU_add_test(suite, "Check Matrices Sizes", test_isMatricesSizesEqual);
 	CU_add_test(suite, "Check Square Matrix", test_isSquareMatrix);
 	CU_add_test(suite, "Matrix Multiplication", test_multiplyMatrices);
