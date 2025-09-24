@@ -64,6 +64,26 @@ void freeMatrixOutcome(MatrixOutcome* matrixOutcome) {
 	}
 }
 
+MatrixErrorCode getMatrixElement(const MatrixOutcome* A,
+							 const size_t row,
+							 const size_t column,
+							 MATRIX_TYPE* element) {
+	MatrixErrorCode errorCode = NONE_ERROR;
+
+	if (!A || A->matrix == NULL || A->matrix->data == NULL) {
+		errorCode = NULL_POINTER_ERROR;
+	}
+	else if (row >= A->matrix->rows || column >= A->matrix->cols) {
+		errorCode = INVALID_ELEMENT_ERROR;
+	} else if (element == NULL) {
+		errorCode = NULL_POINTER_ERROR;
+	} else {
+		*element = A->matrix->data[row][column];
+	}
+
+	return errorCode;
+}
+
 MatrixErrorCode setMatrixElement(const MatrixOutcome* A,
 								 const size_t row,
 								 const size_t column,

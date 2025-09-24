@@ -31,6 +31,97 @@ void test_createMatrix(void) {
 	}
 }
 
+// Тест на получение элемента матрицы
+void test_getMatrixElement(void) {
+    // Создаём матрицу 3x3
+    MatrixOutcome A = createMatrix(3, 3);
+    CU_ASSERT_EQUAL(A.errorCode, NONE_ERROR);
+
+    // Заполняем матрицу тестовыми данными
+    MATRIX_TYPE testData[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    fillMatrix(&A, testData);
+    CU_ASSERT_EQUAL(A.errorCode, NONE_ERROR);
+
+    {
+        // Корректное получение элемента
+        MATRIX_TYPE element;
+        MatrixErrorCode err = getMatrixElement(&A, 0, 0, &element);
+        CU_ASSERT_EQUAL(err, NONE_ERROR);
+        CU_ASSERT_EQUAL(element, 1);
+    }
+
+    {
+        // Получение элемента из середины матрицы
+        MATRIX_TYPE element;
+        MatrixErrorCode err = getMatrixElement(&A, 1, 1, &element);
+        CU_ASSERT_EQUAL(err, NONE_ERROR);
+        CU_ASSERT_EQUAL(element, 5);
+    }
+
+    {
+        // Получение элемента из последней строки и столбца
+        MATRIX_TYPE element;
+        MatrixErrorCode err = getMatrixElement(&A, 2, 2, &element);
+        CU_ASSERT_EQUAL(err, NONE_ERROR);
+        CU_ASSERT_EQUAL(element, 9);
+    }
+
+    {
+        // Попытка получения элемента с неверным индексом строки
+        MATRIX_TYPE element;
+        MatrixErrorCode err = getMatrixElement(&A, 3, 0, &element);
+        CU_ASSERT_EQUAL(err, INVALID_ELEMENT_ERROR);
+    }
+
+    {
+        // Попытка получения элемента с неверным индексом столбца
+        MATRIX_TYPE element;
+        MatrixErrorCode err = getMatrixElement(&A, 0, 3, &element);
+        CU_ASSERT_EQUAL(err, INVALID_ELEMENT_ERROR);
+    }
+
+    {
+        // Попытка получения элемента с NULL указателем на матрицу
+        MATRIX_TYPE element;
+        MatrixErrorCode err = getMatrixElement(NULL, 0, 0, &element);
+        CU_ASSERT_EQUAL(err, NULL_POINTER_ERROR);
+    }
+
+    {
+        // Попытка получения элемента с NULL указателем на результат
+        MatrixErrorCode err = getMatrixElement(&A, 0, 0, NULL);
+        CU_ASSERT_EQUAL(err, NULL_POINTER_ERROR);
+    }
+
+    {
+        // Попытка получения элемента из неинициализированной матрицы
+        MatrixOutcome invalidMatrix;
+        invalidMatrix.matrix = NULL;
+        invalidMatrix.errorCode = NONE_ERROR;
+
+        MATRIX_TYPE element;
+        MatrixErrorCode err = getMatrixElement(&invalidMatrix, 0, 0, &element);
+        CU_ASSERT_EQUAL(err, NULL_POINTER_ERROR);
+    }
+
+    {
+        // Граничный случай: получение элемента с максимально допустимыми индексами
+        MATRIX_TYPE element;
+        MatrixErrorCode err = getMatrixElement(&A, 2, 2, &element); // rows-1, cols-1
+        CU_ASSERT_EQUAL(err, NONE_ERROR);
+        CU_ASSERT_EQUAL(element, 9);
+    }
+
+    {
+        // Граничный случай: попытка получения с индексами равными размерам матрицы
+        MATRIX_TYPE element;
+        MatrixErrorCode err = getMatrixElement(&A, 3, 3, &element); // rows, cols
+        CU_ASSERT_EQUAL(err, INVALID_ELEMENT_ERROR);
+    }
+
+    freeMatrixOutcome(&A);
+}
+
 // Тест на установку элемента матрицы
 void test_setMatrixElement(void) {
 	// Создаём матрицу 2x2
@@ -224,6 +315,7 @@ void test_loadMatrixFromFile(void) {
 void register_matrix_tests(void) {
 	CU_pSuite suite = CU_add_suite("Matrix Tests", NULL, NULL);
 	CU_add_test(suite, "Create Matrix", test_createMatrix);
+	CU_add_test(suite, "Get Matrix Element", test_getMatrixElement);
 	CU_add_test(suite, "Set Martix Element", test_setMatrixElement);
 	CU_add_test(suite, "Check Matrices Sizes", test_isMatricesSizesEqual);
 	CU_add_test(suite, "Check Square Matrix", test_isSquareMatrix);
